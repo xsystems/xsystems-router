@@ -2,3 +2,4 @@
 *.crt
 *.key
 *.credentials
+environment.sh

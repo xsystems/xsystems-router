@@ -1,10 +1,11 @@
 #!/bin/sh
 
-uci set firewall.Allow_SSH_Inbound='rule'
-uci set firewall.Allow_SSH_Inbound.target='ACCEPT'
-uci set firewall.Allow_SSH_Inbound.src='lan'
-uci set firewall.Allow_SSH_Inbound.proto='tcp'
-uci set firewall.Allow_SSH_Inbound.dest_port='22'
+uci add firewall rule
+uci set firewall.@rule[-1].name='Allow-SSH-Inbound'
+uci set firewall.@rule[-1].target='ACCEPT'
+uci set firewall.@rule[-1].src='lan'
+uci set firewall.@rule[-1].proto='tcp'
+uci set firewall.@rule[-1].dest_port='22'
 
 uci commit firewall
 /etc/init.d/firewall restart
