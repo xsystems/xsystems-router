@@ -3,71 +3,70 @@
 opkg install openvpn-openssl luci-app-openvpn
 
 
-uci add network interface
-uci set network.@interface[-1].name='xvpn'
-uci set network.@interface[-1].ifname='tun_xvpn'
-uci set network.@interface[-1].proto='none'
-uci set network.@interface[-1].auto='true'
+uci set network.xvpn='interface'
+uci set network.xvpn.ifname='tun_xvpn'
+uci set network.xvpn.proto='none'
+uci set network.xvpn.auto='true'
 
 uci commit network
 /etc/init.d/network reload
 
 
-uci add firewall zone
-uci set firewall.@zone[-1].name='xvpn'
-uci set firewall.@zone[-1].network='xvpn'
-uci set firewall.@zone[-1].input='ACCEPT'
-uci set firewall.@zone[-1].forward='REJECT'
-uci set firewall.@zone[-1].output='ACCEPT'
-uci set firewall.@zone[-1].masq='true'
+uci set firewall.xvpn='zone'
+uci set firewall.xvpn.name='xvpn'
+uci set firewall.xvpn.network='xvpn'
+uci set firewall.xvpn.input='ACCEPT'
+uci set firewall.xvpn.forward='REJECT'
+uci set firewall.xvpn.output='ACCEPT'
+uci set firewall.xvpn.masq='true'
 
-uci add firewall rule
-uci set firewall.@rule[-1].name='Allow-OpenVPN-Inbound'
-uci set firewall.@rule[-1].target='ACCEPT'
-uci set firewall.@rule[-1].src='*'
-uci set firewall.@rule[-1].proto='udp'
-uci set firewall.@rule[-1].dest_port='1194'
+uci set firewall.openvpn_inbound_allow='rule'
+uci set firewall.openvpn_inbound_allow.name='openvpn_inbound_allow'
+uci set firewall.openvpn_inbound_allow.target='ACCEPT'
+uci set firewall.openvpn_inbound_allow.src='*'
+uci set firewall.openvpn_inbound_allow.proto='udp'
+uci set firewall.openvpn_inbound_allow.dest_port='1194'
 
-uci add firewall forwarding
-uci set firewall.@forwarding[-1].src='lan'
-uci set firewall.@forwarding[-1].dest='xvpn'
+uci set firewall.lan2xvpn='forwarding'
+uci set firewall.lan2xvpn.src='lan'
+uci set firewall.lan2xvpn.dest='xvpn'
 
-uci add firewall forwarding
-uci set firewall.@forwarding[-1].src='xvpn'
-uci set firewall.@forwarding[-1].dest='lan'
+uci set firewall.xvpn2lan='forwarding'
+uci set firewall.xvpn2lan.src='xvpn'
+uci set firewall.xvpn2lan.dest='lan'
 
-uci add firewall forwarding
-uci set firewall.@forwarding[-1].src='xvpn'
-uci set firewall.@forwarding[-1].dest='wan'
+uci set firewall.xvpn2wan='forwarding'
+uci set firewall.xvpn2wan.src='xvpn'
+uci set firewall.xvpn2wan.dest='wan'
 
 uci commit firewall
 /etc/init.d/firewall restart
 
 
-uci add openvpn openvpn
-uci set openvpn.@openvpn[-1].name='xvpn'
-uci set openvpn.@openvpn[-1].enabled='true'
-uci set openvpn.@openvpn[-1].verb='3'
-uci set openvpn.@openvpn[-1].port='1194'
-uci set openvpn.@openvpn[-1].proto='udp'
-uci set openvpn.@openvpn[-1].dev='tun_xvpn'
-uci set openvpn.@openvpn[-1].topology='subnet'
-uci set openvpn.@openvpn[-1].server='10.8.0.0 255.255.255.0'
-uci set openvpn.@openvpn[-1].keepalive='10 120'
-uci set openvpn.@openvpn[-1].explicit_exit_notify='true'
-uci set openvpn.@openvpn[-1].persist_key='true'
-uci set openvpn.@openvpn[-1].persist_tun='true'
-uci set openvpn.@openvpn[-1].ifconfig_pool_persist='openvpn-ipp.txt'
-uci set openvpn.@openvpn[-1].ca='/etc/openvpn/ca.crt'
-uci set openvpn.@openvpn[-1].cert='/etc/openvpn/server.crt'
-uci set openvpn.@openvpn[-1].key='/etc/openvpn/server.key'
-uci set openvpn.@openvpn[-1].dh='/etc/openvpn/dh.pem'
-uci set openvpn.@openvpn[-1].user='nobody'
-uci set openvpn.@openvpn[-1].group='nogroup'
-uci set openvpn.@openvpn[-1].log='openvpn.log'
-uci set openvpn.@openvpn[-1].status='openvpn-status.log'
-
-uci add_list openvpn.@openvpn[-1].push='redirect-gateway def1'
+uci set openvpn.xvpn='openvpn'
+uci set openvpn.xvpn.name='xvpn'
+uci set openvpn.xvpn.enabled='true'
+uci set openvpn.xvpn.verb='3'
+uci set openvpn.xvpn.port='1194'
+uci set openvpn.xvpn.proto='udp'
+uci set openvpn.xvpn.dev='tun_xvpn'
+uci set openvpn.xvpn.topology='subnet'
+uci set openvpn.xvpn.server='10.8.0.0 255.255.255.0'
+uci set openvpn.xvpn.keepalive='10 120'
+uci set openvpn.xvpn.explicit_exit_notify='true'
+uci set openvpn.xvpn.persist_key='true'
+uci set openvpn.xvpn.persist_tun='true'
+uci set openvpn.xvpn.ifconfig_pool_persist='openvpn-ipp.txt'
+uci set openvpn.xvpn.ca='/etc/openvpn/ca.crt'
+uci set openvpn.xvpn.cert='/etc/openvpn/server.crt'
+uci set openvpn.xvpn.key='/etc/openvpn/server.key'
+uci set openvpn.xvpn.dh='/etc/openvpn/dh.pem'
+uci set openvpn.xvpn.user='nobody'
+uci set openvpn.xvpn.group='nogroup'
+uci set openvpn.xvpn.log='openvpn.log'
+uci set openvpn.xvpn.status='openvpn-status.log'
+uci delete openvpn.xvpn.push
+uci add_list openvpn.xvpn.push='redirect-gateway def1'
 
 uci commit openvpn
 

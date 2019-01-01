@@ -1,8 +1,6 @@
 #!/bin/sh
 
-ROUTER_HOSTNAME="root@192.168.128.1"
-ROUTER_NORDVPN_REMOTE="62.112.10.100 443"
-
+[ -f ./environment.sh ] && . ./environment.sh
 
 transfering () {
   echo -e "\e[33m\e[1mTransfering:\033[0m $1"
@@ -40,6 +38,6 @@ for file in config/*
 do
   filename=`basename "${file%.*}"`
   configuration_start ${filename}
-  ssh ${ROUTER_HOSTNAME} < "${file}"
+  envsubst < "${file}" | ssh ${ROUTER_HOSTNAME}
   configuration_end ${filename}
 done
