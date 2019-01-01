@@ -12,12 +12,12 @@ uci commit firewall
 
 
 uci set dropbear.@dropbear[0]='dropbear'
-uci set dropbear.@dropbear[0].enable='true'
+uci set dropbear.@dropbear[0].enable='1'
 uci set dropbear.@dropbear[0].Interface='lan'
 uci set dropbear.@dropbear[0].Port='22'
-uci set dropbear.@dropbear[0].PasswordAuth='false'
-uci set dropbear.@dropbear[0].RootLogin='true'
-uci set dropbear.@dropbear[0].RootPasswordAuth='false'
+uci set dropbear.@dropbear[0].PasswordAuth='0'
+uci set dropbear.@dropbear[0].RootLogin='1'
+uci set dropbear.@dropbear[0].RootPasswordAuth='0'
 
 uci commit dropbear
 
