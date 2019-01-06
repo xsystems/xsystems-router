@@ -17,16 +17,16 @@ configuration_end () {
 }
 
 
-for file in $(cd files; find * -type f)
+for file in $(cd files; find * -type d -links 2)
 do
-    transfering "/$file"
-    ssh ${ROUTER_HOSTNAME} "mkdir -p `dirname /${file}`"
-    cat "files/${file}" | ssh ${ROUTER_HOSTNAME} "cat > /${file}"
+    transfering "/${file}"
+    scp -r "files/${file}" "${ROUTER_HOSTNAME}:/${file}"
 done
 
 
 configuration_start "General"
 ssh ${ROUTER_HOSTNAME} << EOF
+  echo -e "${ROUTER_ROOT_PASSWORD}\n${ROUTER_ROOT_PASSWORD}" | passwd
   opkg update
   opkg install  ipset \
                 diffutils \
