@@ -20,7 +20,7 @@ configuration_end () {
 for file in $(cd files; find * -type d -links 2)
 do
     transfering "/${file}"
-    scp -r "files/${file}" "${ROUTER_HOSTNAME}:/${file}"
+    scp -r "files/${file}" "${ROUTER_HOSTNAME}:`dirname /${file}`"
 done
 
 
