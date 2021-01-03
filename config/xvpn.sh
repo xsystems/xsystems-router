@@ -56,10 +56,18 @@ uci set openvpn.xvpn.verb='3'
 uci set openvpn.xvpn.ca='/etc/openvpn/xvpn_ca.crt'
 uci set openvpn.xvpn.cert='/etc/openvpn/xvpn_server.crt'
 uci set openvpn.xvpn.key='/etc/openvpn/xvpn_server.key'
-uci set openvpn.xvpn.dh='/etc/openvpn/xvpn_dh.pem'
 uci set openvpn.xvpn.ifconfig_pool_persist='xvpn-ipp.txt'
+uci set openvpn.xvpn.dh='none'
 uci set openvpn.xvpn.log='xvpn.log'
 uci set openvpn.xvpn.status='xvpn-status.log'
+
+uci set openvpn.xvpn.auth='SHA512'
+uci set openvpn.xvpn.keysize='256'
+uci set openvpn.xvpn.tls_server='1'
+uci set openvpn.xvpn.tls_version_min='1.2'
+uci set openvpn.xvpn.tls_cipher='TLS-ECDHE-ECDSA-WITH-AES-256-GCM-SHA384'
+uci set openvpn.xvpn.cipher='AES-256-GCM'
+uci set openvpn.xvpn.remote_cert_tls='client'
 
 uci set openvpn.xvpn.user='nobody'
 uci set openvpn.xvpn.group='nogroup'
@@ -72,4 +80,4 @@ uci add_list openvpn.xvpn.push='redirect-gateway def1'
 uci commit openvpn
 
 /etc/init.d/openvpn enable
-/etc/init.d/openvpn start
+/etc/init.d/openvpn restart

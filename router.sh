@@ -1,43 +1,36 @@
 #!/bin/sh
 
-[ -f ./environment.sh ] && . ./environment.sh
+[ -f environment/variables.sh ] && . environment/variables.sh
+[ -f environment/secrets.sh   ] && . environment/secrets.sh
 
-transfering () {
-  echo -e "\e[33m\e[1mTransfering:\033[0m $1"
+print_info() {
+    echo -e "\e[34m\e[1m$1\033[0m"
 }
 
-configuration_start () {
-  name=`echo $1 | awk '{print toupper($0)}'`
-  echo -e "\e[33m\e[1m### $name START ###\033[0m"
+initial_setup() {
+    print_info "INITIAL SETUP"
+	ssh ${ROUTER_HOSTNAME} <<-EOF
+		echo -e "${ROUTER_ROOT_PASSWORD}\n${ROUTER_ROOT_PASSWORD}" | passwd
+		opkg update
+		opkg install  ipset \
+									diffutils \
+									htop \
+									rsyncd
+	EOF
 }
 
-configuration_end () {
-  name=`echo $1 | awk '{print toupper($0)}'`
-  echo -e "\e[33m\e[1m### $name END ###\033[0m"
+transfer_files () {
+    print_info "TRANSFERING FILES"
+    rsync -Prlpt files/ ${ROUTER_HOSTNAME}:/
 }
 
+apply_configuration() {
+    for file in config/*.sh ; do
+        print_info "APPLY ${file}"
+        envsubst < "${file}" | ssh ${ROUTER_HOSTNAME}
+    done
+}
 
-for file in $(cd files; find * -type d -links 2)
-do
-    transfering "/${file}"
-    scp -r "files/${file}" "${ROUTER_HOSTNAME}:`dirname /${file}`"
-done
-
-
-configuration_start "General"
-ssh ${ROUTER_HOSTNAME} << EOF
-  echo -e "${ROUTER_ROOT_PASSWORD}\n${ROUTER_ROOT_PASSWORD}" | passwd
-  opkg update
-  opkg install  ipset \
-                diffutils \
-                htop
-EOF
-configuration_end "General"
-
-for file in config/*
-do
-  filename=`basename "${file%.*}"`
-  configuration_start ${filename}
-  envsubst < "${file}" | ssh ${ROUTER_HOSTNAME}
-  configuration_end ${filename}
-done
+initial_setup
+transfer_files
+apply_configuration
