@@ -1,7 +1,6 @@
 #!/bin/sh
 
 [ -f environment/variables.sh ] && . environment/variables.sh
-[ -f environment/secrets.sh   ] && . environment/secrets.sh
 
 print_info() {
     echo -e "\e[34m\e[1m$1\033[0m"
@@ -12,10 +11,10 @@ initial_setup() {
 	ssh ${ROUTER_HOSTNAME} <<-EOF
 		echo -e "${ROUTER_ROOT_PASSWORD}\n${ROUTER_ROOT_PASSWORD}" | passwd
 		opkg update
-		opkg install  ipset \
-									diffutils \
-									htop \
-									rsyncd
+		opkg install  	ipset \
+						diffutils \
+						htop \
+						rsyncd
 	EOF
 }
 
@@ -27,7 +26,7 @@ transfer_files () {
 apply_configuration() {
     for file in config/*.sh ; do
         print_info "APPLY ${file}"
-        envsubst < "${file}" | ssh ${ROUTER_HOSTNAME}
+        envsubst "$VARIABLES_TO_SUBSTITUTE" < "${file}" | ssh ${ROUTER_HOSTNAME}
     done
 }
 
