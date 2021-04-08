@@ -11,12 +11,15 @@
 
 The location of the following items are indicated at the [structure section](#structure).
 
-1. Environment Variables containing Secrets
+1. DHCP and DNS configuration, with each line having the following format:
+    ```
+    01:23:45:67:89:AB    192.168.1.42     my.domain.name.org      my-hostname
+    ```
+2. Environment Variables containing Secrets
     | Environment Variable  | Description                               |
     | --------------------- | ----------------------------------------- |
     | ROUTER_ROOT_PASSWORD  | The password used for the `root` account  |
     | ROUTER_WIFI_KEY       | The WIFI password                         |
-2. NordVPN Secrets
 3. xSystems VPN Secrets
 
 
@@ -25,26 +28,24 @@ The location of the following items are indicated at the [structure section](#st
 ```
 xsystems-router
 ├── config
+│   ├── dnsmasq.sh
 │   ├── luci.sh
 │   ├── network.sh
-│   ├── nordvpn.sh.disabled
 │   ├── ssh.sh
 │   └── xvpn.sh
 ├── environment
-│   ├── secrets.sh                      (1)
+│   ├── dnsmasq.dat                     (1)
+│   ├── secrets.sh                      (2)
 │   └── variables.sh
 ├── files
 │   └── etc
 │       ├── dropbear
 │       │   └── authorized_keys
 │       └── openvpn
-│           ├── nordvpn_ca.crt          (3)
-│           ├── nordvpn.credentials     (3)
-│           ├── nordvpn_ta.key          (3)
-│           ├── xvpn_ca.crt             (2)
-│           ├── xvpn_dh.pem             (2)
-│           ├── xvpn_server.crt         (2)
-│           └── xvpn_server.key         (2)
+│           ├── xvpn_ca.crt             (3)
+│           ├── xvpn_server.crt         (3)
+│           └── xvpn_server.key         (3)
+├── .gitignore
 ├── README.md
 └── router.sh
 ```
