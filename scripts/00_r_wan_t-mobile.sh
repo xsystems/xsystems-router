@@ -3,6 +3,7 @@
 uci set network.@switch_vlan[1].vid='300'
 uci set network.@switch_vlan[1].ports='4t 6t'
 uci set network.wan.ifname='eth1.300'
+uci set network.wan6.ifname='eth1.300'
 
 uci commit network
 
