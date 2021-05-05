@@ -76,6 +76,7 @@ uci set openvpn.xvpn.keepalive='10 120'
 uci set openvpn.xvpn.explicit_exit_notify='1'
 uci delete openvpn.xvpn.push
 uci add_list openvpn.xvpn.push='redirect-gateway def1'
+uci add_list openvpn.xvpn.push='dhcp-option DNS 10.8.0.1'
 
 uci commit openvpn
 
