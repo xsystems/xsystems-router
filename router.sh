@@ -12,6 +12,6 @@ for file in scripts/*.sh ; do
     if [ `expr "${file}" : "^scripts/[0-9][0-9]_l_*"` -gt 0 ] ; then
         . "${file}"
     else
-        envsubst "$VARIABLES_TO_SUBSTITUTE" < "${file}" | ssh "${ROUTER_HOSTNAME}"
+        DOLLAR=$ envsubst < "${file}" | ssh "${ROUTER_HOSTNAME}"
     fi
 done
