@@ -3,4 +3,5 @@
 *.key
 *.credentials
 secrets.sh
-dnsmasq.dat
+static_leases.dat
+hostnames.dat

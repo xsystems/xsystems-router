@@ -11,16 +11,20 @@
 
 The location of the following items are indicated at the [structure section](#structure).
 
-1. DHCP and DNS configuration, with each line having the following format:
+1. DNS configuration, i.e. domain names, with each line having the following format:
     ```
-    01:23:45:67:89:AB    192.168.1.42     my.domain.name.org      my-hostname
+    192.168.1.42     my.domain.name.org
     ```
-2. Environment Variables containing Secrets
+2. DHCP configuration, i.e. static leases and hostnames, with each line having the following format:
+    ```
+    01:23:45:67:89:AB    192.168.1.42     my-hostname
+    ```
+3. Environment Variables containing Secrets
     | Environment Variable  | Description                               |
     | --------------------- | ----------------------------------------- |
     | ROUTER_ROOT_PASSWORD  | The password used for the `root` account  |
     | ROUTER_WIFI_KEY       | The WIFI password                         |
-3. xSystems VPN Secrets
+4. xSystems VPN Secrets
 
 
 ## Scripts
@@ -51,17 +55,18 @@ Where `name` is a human-readable description of the script.
 ```
 xsystems-router
 ├── environment
-│   ├── dnsmasq.dat                     (1)
+│   ├── hostnames.dat                   (1)
 │   ├── secrets.sh                      (2)
+│   ├── static_leases.dat               (3)
 │   └── variables.sh
 ├── files
 │   └── etc
 │       ├── dropbear
 │       │   └── authorized_keys
 │       └── openvpn
-│           ├── xvpn_ca.crt             (3)
-│           ├── xvpn_server.crt         (3)
-│           └── xvpn_server.key         (3)
+│           ├── xvpn_ca.crt             (4)
+│           ├── xvpn_server.crt         (4)
+│           └── xvpn_server.key         (4)
 ├── .gitignore
 ├── README.md
 ├── router.sh

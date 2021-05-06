@@ -1,18 +1,22 @@
 #/bin/sh
 
-while read -r MAC IP DOMAIN HOST_NAME ; do
-    NAME=$(echo "${DOLLAR}{HOST_NAME}" | sed 's/-/_/g')
-
-    uci set dhcp."${DOLLAR}{NAME}_host"='host'
-    uci set dhcp."${DOLLAR}{NAME}_host".ip="${DOLLAR}{IP}"
-    uci set dhcp."${DOLLAR}{NAME}_host".mac="${DOLLAR}{MAC}"
-    uci set dhcp."${DOLLAR}{NAME}_host".name="${DOLLAR}{HOST_NAME}"
-
-    uci set dhcp."${DOLLAR}{NAME}_domain"='domain'
-    uci set dhcp."${DOLLAR}{NAME}_domain".ip="${DOLLAR}{IP}"
-    uci set dhcp."${DOLLAR}{NAME}_domain".name="${DOLLAR}{DOMAIN}"
+while uci -q delete dhcp.@host[0] ; do :; done
+while read -r MAC IP HOST_NAME ; do
+    uci add dhcp host
+    uci set dhcp.@host[-1].ip="${DOLLAR}{IP}"
+    uci set dhcp.@host[-1].mac="${DOLLAR}{MAC}"
+    uci set dhcp.@host[-1].name="${DOLLAR}{HOST_NAME}"
 done <<EOF
-${DNSMASQ_DATA}
+${STATIC_LEASES_DATA}
+EOF
+
+while uci -q delete dhcp.@domain[0] ; do :; done
+while read -r IP DOMAIN ; do
+    uci add dhcp domain
+    uci set dhcp.@domain[-1].ip="${DOLLAR}{IP}"
+    uci set dhcp.@domain[-1].name="${DOLLAR}{DOMAIN}"
+done <<EOF
+${HOSTNAMES_DATA}
 EOF
 
 uci set dhcp.@dhcp[0].leasetime='600s'
