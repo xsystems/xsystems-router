@@ -12,6 +12,6 @@ for file in scripts/*.sh ; do
     if [ `expr "${file}" : "^scripts/[0-9][0-9]_l_*"` -gt 0 ] ; then
         . "${file}"
     else
-        DOLLAR=$ envsubst < "${file}" | ssh "${ROUTER_HOSTNAME}"
+        DOLLAR=$ envsubst < "${file}" | ssh -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=+ssh-rsa "${ROUTER_HOSTNAME}"
     fi
 done
